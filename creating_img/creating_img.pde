@@ -136,7 +136,7 @@ void openNewWindow(int w, int h) {
     PGraphics pg;
     
     public void settings() {
-      size(w, h + 200); // Incrementar la altura de la ventana para los controles
+      size(w + 200, h); // Incrementar el ancho de la ventana para los controles
     }
     
     public void setup() {
@@ -155,8 +155,9 @@ void openNewWindow(int w, int h) {
     void setupNewWindowUI(int w, int h) {
       // Menú de efectos
       newCp5.addDropdownList("effects")
-        .setPosition(50, h + 20)
-        .setSize(150, 100)
+        .setPosition(w + 20, 20)
+        .setSize(150, 150)
+        .setOpen(true) // Mantener la lista de efectos abierta
         .addItem("None", 0)
         .addItem("Desenfoque", 1)
         .addItem("Escala de Grises", 2)
@@ -181,7 +182,7 @@ void openNewWindow(int w, int h) {
 
       // Slider para ajustar la densidad
       newCp5.addSlider("density")
-        .setPosition(50, h + 140)
+        .setPosition(w + 20, 140)
         .setSize(150, 20)
         .setRange(0.1, 1.0)
         .setValue(density)
@@ -196,7 +197,7 @@ void openNewWindow(int w, int h) {
 
       // Slider para ajustar el tamaño de la letra
       newCp5.addSlider("wordSize")
-        .setPosition(250, h + 140)
+        .setPosition(w + 20, 180)
         .setSize(150, 20)
         .setRange(1, 50)
         .setValue(wordSize)
@@ -212,7 +213,7 @@ void openNewWindow(int w, int h) {
       // Botón para descargar la imagen
       newCp5.addButton("downloadImage")
         .setLabel("Descargar Imagen")
-        .setPosition(450, h + 140)
+        .setPosition(w + 20, 220)
         .setSize(150, 30)
         .onClick(new CallbackListener() {
           public void controlEvent(CallbackEvent event) {
@@ -266,11 +267,11 @@ void openNewWindow(int w, int h) {
     void applySepia(PGraphics pg) {
       pg.loadPixels();
       for (int i = 0; i < pg.pixels.length; i++) {
-        color c = pg.pixels[i];
+        int c = pg.pixels[i];
         float r = red(c) * 0.393 + green(c) * 0.769 + blue(c) * 0.189;
         float g = red(c) * 0.349 + green(c) * 0.686 + blue(c) * 0.168;
         float b = red(c) * 0.272 + green(c) * 0.534 + blue(c) * 0.131;
-        pg.pixels[i] = color(constrain(r, 0, 255), constrain(g, 0, 255), constrain(b, 0, 255));
+        pg.pixels[i] = color(min(255, r), min(255, g), min(255, b));
       }
       pg.updatePixels();
     }
@@ -285,10 +286,11 @@ void openNewWindow(int w, int h) {
       pg.loadPixels();
       for (int i = 0; i < pg.pixels.length; i++) {
         int c = pg.pixels[i];
-        float r = red(c) + random(-50, 50);
-        float g = green(c) + random(-50, 50);
-        float b = blue(c) + random(-50, 50);
-        pg.pixels[i] = color(constrain(r, 0, 255), constrain(g, 0, 255), constrain(b, 0, 255));
+        float n = random(-50, 50);
+        float r = red(c) + n;
+        float g = green(c) + n;
+        float b = blue(c) + n;
+        pg.pixels[i] = color(min(255, max(0, r)), min(255, max(0, g)), min(255, max(0, b)));
       }
       pg.updatePixels();
     }
